@@ -120,6 +120,13 @@
       activeImage = e.target;
       initialX = e.type === 'touchstart' ? e.touches[0].clientX - activeImage.offsetLeft : e.clientX - activeImage.offsetLeft;
       initialY = e.type === 'touchstart' ? e.touches[0].clientY - activeImage.offsetTop : e.clientY - activeImage.offsetTop;
+      images.forEach((image, index) => {
+        if (image === activeImage) {
+          image.style.zIndex = images.length + index;
+        } else {
+          image.style.zIndex = index;
+        }
+      });
     }
 
     function dragEnd() {
