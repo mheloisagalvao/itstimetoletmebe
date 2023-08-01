@@ -111,22 +111,15 @@
   <img class="draggable" src="caminho_para_imagem34.jpeg" alt="Imagem 34" style="top: 200px; left: 200px;">
 
   <script>
-    const images = document.querySelectorAll('.draggable');
+   const images = document.querySelectorAll('.draggable');
     let activeImage = null;
     let initialX, initialY;
 
     function dragStart(e) {
+      e.preventDefault();
       activeImage = e.target;
-      initialX = e.clientX - activeImage.offsetLeft;
-      initialY = e.clientY - activeImage.offsetTop;
-
-      images.forEach((image) => {
-        if (image === activeImage) {
-          image.style.zIndex = 1;
-        } else {
-          image.style.zIndex = 0;
-        }
-      });
+      initialX = e.type === 'touchstart' ? e.touches[0].clientX - activeImage.offsetLeft : e.clientX - activeImage.offsetLeft;
+      initialY = e.type === 'touchstart' ? e.touches[0].clientY - activeImage.offsetTop : e.clientY - activeImage.offsetTop;
     }
 
     function dragEnd() {
@@ -136,8 +129,8 @@
     function drag(e) {
       if (activeImage) {
         e.preventDefault();
-        const x = e.clientX - initialX;
-        const y = e.clientY - initialY;
+        const x = e.type === 'touchmove' ? e.touches[0].clientX - initialX : e.clientX - initialX;
+        const y = e.type === 'touchmove' ? e.touches[0].clientY - initialY : e.clientY - initialY;
         activeImage.style.left = x + 'px';
         activeImage.style.top = y + 'px';
       }
@@ -146,9 +139,12 @@
     images.forEach((image) => {
       image.addEventListener('mousedown', dragStart);
       image.addEventListener('mouseup', dragEnd);
+      image.addEventListener('touchstart', dragStart);
+      image.addEventListener('touchend', dragEnd);
     });
 
     document.addEventListener('mousemove', drag);
+    document.addEventListener('touchmove', drag);
   </script>
 </body>
 </html>
